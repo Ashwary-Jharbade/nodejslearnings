@@ -1,9 +1,11 @@
 const http = require("http");
+const Route = require("./routes");
 
 http
   .createServer((req, res) => {
     res.writeHead(200, { "Content-Type": "text/html" });
-    res.write("<b>Hello there</b>");
+    const url = req.url;
+    Route.routes(url, req, res);
     res.end();
   })
   .listen(8000, () => {
