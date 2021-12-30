@@ -1,13 +1,29 @@
-const http = require("http");
-const Route = require("./routes");
+const express = require("express");
+const app = express();
+app.get("/", (req, res) => {
+  res.send("<h1>Hello there</h1>");
+});
 
-http
-  .createServer((req, res) => {
-    res.writeHead(200, { "Content-Type": "text/html" });
-    const url = req.url;
-    Route.routes(url, req, res);
-    res.end();
-  })
-  .listen(8000, () => {
-    console.log("Server running at 8000");
-  });
+app.get("/resource", (req, res) => {
+  const { name } = req.query;
+  if (!name) {
+    res.send("Missing Name query");
+  }
+  res.send(`Name: ${name}`);
+});
+
+app.get("/resource/:id", (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    res.send("Missing Id parameter");
+  }
+  res.send(`Id: ${id}`);
+});
+
+app.all("*", (req, res) => {
+  res.send("<h1>Bad request</h1>");
+});
+
+app.listen(3000, () => {
+  console.log("Listening at 3000");
+});
