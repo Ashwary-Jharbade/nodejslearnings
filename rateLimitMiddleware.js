@@ -13,7 +13,7 @@ const userAPIAccessDetailsManager = () => {
   const userAPIAccessDetails = {};
   return (req, res) => {
     const { totalCount, alogorithm, digestType } = rateLimitConstants;
-    const userId = req.socket.remoteAddress;
+    const userId = req.socket.remoteAddress + req.path;
     const hashedUserId = crypto
       .createHash(alogorithm)
       .update(userId)
@@ -23,17 +23,13 @@ const userAPIAccessDetailsManager = () => {
       const userDetails = userAPIAccessDetails[hashedUserId];
       if (currentTime < userDetails.expirationTime) {
         const { remainingCount } = userAPIAccessDetails[hashedUserId];
-        if (!remainingCount)
-          return res.status(429).send({
-            header: { "Content-Type": "text/html" },
-            message: "Request Count Exceeded",
-          });
+        if (!remainingCount) return false;
         userAPIAccessDetails[hashedUserId] = {
           ...userAPIAccessDetails[hashedUserId],
           currentTime,
           remainingCount: remainingCount - 1,
         };
-        return;
+        return true;
       }
     }
     const expirationTime = getNewExpirationTime();
@@ -43,7 +39,7 @@ const userAPIAccessDetailsManager = () => {
       currentTime,
       remainingCount: totalCount - 1,
     };
-    return;
+    return true;
   };
 };
 

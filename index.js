@@ -9,9 +9,13 @@ app.get("/", (req, res) => {
   res.send("<h1>Hello there</h1>");
 });
 
-app.get("/movie", rateLimitAPI, (req, res) => {
+app.get("/movie", (req, res) => {
+  const flag = rateLimitAPI(req, res);
+  if (!flag)
+    return res.status(429).json({
+      message: "API requests exceeded",
+    });
   return res.status(200).json({
-    header: { "Content-Type": "text/html" },
     message: "API call succeded",
   });
 });
