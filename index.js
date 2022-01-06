@@ -1,23 +1,19 @@
 const express = require("express");
 const app = express();
+const rateLimitAPI = require("./rateLimitMiddleware");
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/", (req, res) => {
   res.send("<h1>Hello there</h1>");
 });
 
-app.get("/resource", (req, res) => {
-  const { name } = req.query;
-  if (!name) {
-    res.send("Missing Name query");
-  }
-  res.send(`Name: ${name}`);
-});
-
-app.get("/resource/:id", (req, res) => {
-  const { id } = req.params;
-  if (!id) {
-    res.send("Missing Id parameter");
-  }
-  res.send(`Id: ${id}`);
+app.get("/movie", rateLimitAPI, (req, res) => {
+  return res.status(200).json({
+    header: { "Content-Type": "text/html" },
+    message: "API call succeded",
+  });
 });
 
 app.all("*", (req, res) => {
