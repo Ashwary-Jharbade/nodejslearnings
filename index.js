@@ -1,26 +1,28 @@
 const express = require("express");
+const apiResponse = require("./utils/apiResponse");
 const app = express();
 const jwtUtils = require("./utils/jwt/index");
+const HTTP = require("./const").HTTP;
+require("dotenv").config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.send("<h1>Hello there</h1>");
+  return res.send("<h1>Hello there</h1>");
 });
 
-app.post("/create", (req, res) => {
-  const payload = req.body;
-  const token = jwtUtils.createToken(payload);
-  res.status(200).json({ token });
+app.post("/create", jwtUtils.createToken, (req, res) => {
+  const token = req.token;
+  return res.send(apiResponse("", HTTP.SUCCESS_CREATED, { token }));
 });
 
 app.get("/listen", jwtUtils.validateToken, (req, res) => {
-  res.status(200).send("Listening music");
+  return res.send(apiResponse("Listening music", HTTP.SUCCESS, req.decoded));
 });
 
 app.all("*", (req, res) => {
-  res.send("<h1>Bad request</h1>");
+  return res.send("<h1>Bad request</h1>");
 });
 
 app.listen(3000, () => {

@@ -1,20 +1,30 @@
 const jwt = require("jsonwebtoken");
-const tokenConstants = require("../../const");
+const constants = require("../../const");
+const apiResponse = require("../apiResponse");
 
-const createToken = (payload) => {
-  const token = jwt.sign(payload, tokenConstants.secureKey, {
-    expiresIn: tokenConstants.expiresIn,
+const createToken = (req, res, next) => {
+  const {
+    TOKEN: { SECURE_KEY, EXPIRESIN },
+  } = constants;
+  const payload = req.body;
+  const token = jwt.sign(payload, SECURE_KEY, {
+    expiresIn: EXPIRESIN,
   });
-  return token;
+  req.token = token;
+  next();
 };
 
 const validateToken = (req, res, next) => {
+  const {
+    HTTP: { UNAUTHORIZED },
+    TOKEN: { SECURE_KEY },
+  } = constants;
   const token = req.body.token;
-  jwt.verify(token, tokenConstants.secureKey, (err, decode) => {
+  jwt.verify(token, SECURE_KEY, (err, decode) => {
     if (err) {
-      res.status(401).send("Unauthorized");
+      return res.send(apiResponse("Unauthorized", UNAUTHORIZED, {}, err));
     }
-    console.log(decode);
+    req.decoded = decode;
   });
   next();
 };
