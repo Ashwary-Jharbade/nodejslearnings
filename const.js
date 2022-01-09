@@ -1,5 +1,5 @@
 const TOKEN = {
-  SECURE_KEY: process.env.SECURE_KEY || "sdgvsdbn2qe2332l324asfa532asd5sfc",
+  SECURE_KEY: process.env.SECRET_KEY || "sdgvsdbn2qe2332l324asfa532asd5sfc",
   EXPIRESIN: process.env.EXPIRY_TIME || 60,
 };
 
