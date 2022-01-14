@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3000;
 
 const NetflixUserDetailModel = require("./src/API/Netflix/User/schema");
 const NetflixMovieModel = require("./src/API/Netflix/Movie/schema");
+const NetflixShowModel = require("./src/API/Netflix/Show/schema");
 
 // Initiating DB
 dbInit();
@@ -29,13 +30,13 @@ app.get("/user", async (req, res) => {
     await userDetailInstance.save();
     return res.status(200).send("Account Created Successfully");
   } catch (error) {
-    return res.status(404).send("Account Creation Failed");
+    return res.status(404).send("Unable to create account");
   }
 });
 
 app.get("/movie", async (req, res) => {
   try {
-    const moviewDetails = {
+    const movieDetails = {
       title: "Avengers",
       summary:
         "Marvel superheroes assembled for saving the Ney York city attacks from alien attack",
@@ -46,7 +47,8 @@ app.get("/movie", async (req, res) => {
       cast: [
         {
           name: "Robert Jr",
-          artistImage: "",
+          artistImage:
+            "https://finding-Nemo/famous/celebs/pictures/robert/downy/jr/rdj.jpeg",
           role: "Tony Stark/Iron Man",
         },
       ],
@@ -55,11 +57,47 @@ app.get("/movie", async (req, res) => {
       runTime: "2h 33m",
       accessType: "Basic",
     };
-    const movieDetailInstance = new NetflixMovieModel(moviewDetails);
+    const movieDetailInstance = new NetflixMovieModel(movieDetails);
     await movieDetailInstance.save();
-    return res.status(200).send("Account Created Successfully");
+    return res.status(200).send("Movie Added Successfully");
   } catch (error) {
-    return res.status(404).send("Account Creation Failed");
+    return res.status(404).send("Unable to add movie");
+  }
+});
+
+app.get("/show", async (req, res) => {
+  try {
+    const showDetails = {
+      title: "Arrow",
+      season: 1,
+      summary:
+        "After 5 year living in hell Oliver Quuen decides to protect his home Starling City as a viglante",
+      poster: "https://netflix/show/poster/arrow.jpeg",
+      mediaType: "Show",
+      startDate: new Date(),
+      endDate: new Date(),
+      cast: [
+        {
+          name: "Jhon Doe",
+          artistImage: "https://artist/image/jhon/doe/img/jpeg",
+          role: "Oliver Queen/Green Arrow",
+        },
+      ],
+      director: ["Arrow Director"],
+      episodes: [
+        {
+          title: "1",
+          mediaPath: "https://netflix/show/stream/arrow/s1/ep1/720p.mkv",
+        },
+      ],
+      runTime: "1h",
+      accessType: "Basic",
+    };
+    const showInstance = new NetflixShowModel(showDetails);
+    await showInstance.save();
+    return res.status(200).send("Show Added Successfully");
+  } catch (error) {
+    return res.status(404).send("Unable to add show");
   }
 });
 

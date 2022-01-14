@@ -1,9 +1,14 @@
 const Mongoose = require("mongoose");
 
-const NetflixMovieSchema = Mongoose.Schema(
+const NetflixShowSchema = new Mongoose.Schema(
   {
     title: {
       type: String,
+      required: true,
+    },
+    season: {
+      type: Number,
+      default: 1,
       required: true,
     },
     summary: {
@@ -16,14 +21,18 @@ const NetflixMovieSchema = Mongoose.Schema(
     },
     mediaType: {
       type: String,
-      enum: ["Movie", "Show", "Documentry", "Short Film"],
-      default: "Movie",
+      enum: ["Show", "Decumentry", "Anime"],
+      default: "Show",
     },
-    generes: {
+    gereres: {
       type: [String],
       required: true,
     },
-    releaseDate: {
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    endDate: {
       type: Date,
       required: true,
     },
@@ -47,10 +56,18 @@ const NetflixMovieSchema = Mongoose.Schema(
       type: [String],
       required: true,
     },
-    mediaPath: {
-      type: String,
-      required: true,
-    },
+    episodes: [
+      {
+        title: {
+          type: String,
+          required: true,
+        },
+        mediaPath: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     runTime: {
       type: String,
       required: true,
@@ -67,5 +84,5 @@ const NetflixMovieSchema = Mongoose.Schema(
   }
 );
 
-const NetflixMovieModel = Mongoose.model("Movie", NetflixMovieSchema);
-module.exports = NetflixMovieModel;
+const NetflixShowModel = Mongoose.model("Show", NetflixShowSchema);
+module.exports = NetflixShowModel;
