@@ -19,7 +19,7 @@ app.get("/user", async (req, res) => {
   try {
     const userDetails = {
       name: "Ashwary Jharbade",
-      email: "ashwary.jharbade99@gmail.com",
+      email: "ashwary.jharbade@gmail.com",
       phone: "7999702847",
       plan: "Premium",
       billingCycle: "1m",
